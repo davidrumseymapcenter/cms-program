@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conference Program</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap");
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --border: #21262d;
+        --text: #e6edf3;
+        --muted: #8b949e;
+        --gold: #d4a843;
+        --morning: #2f81f7;
+        --afternoon: #3fb950;
+        --afternoon2: #bc8cff;
+        --brk: #f78166;
+        --admin: #58a6ff;
+        --keynote: #ffa657;
+      }
+
+      html,
+      body {
+        height: 100vh;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Inter", system-ui, sans-serif;
+      }
+
+      /* ── Shell ── */
+      .page {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 18px 40px 12px;
+        gap: 12px;
+      }
+
+      /* ── Header ── */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .conf-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 4px;
+      }
+      .conf-title {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(22px, 2.4vw, 34px);
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+      }
+      .header-right {
+        font-size: 11px;
+        color: var(--muted);
+        text-align: right;
+        letter-spacing: 0.04em;
+      }
+
+      /* ── Two-column body ── */
+      .columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 32px;
+        flex: 1;
+        overflow: hidden;
+        align-items: start;
+      }
+
+      /* ── Session block ── */
+      .session-block {
+        margin-bottom: 8px;
+      }
+
+      .session-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0 6px;
+      }
+      .session-header .pip {
+        width: 4px;
+        height: 22px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .session-header h2 {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .session-header .rule {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ── Row ── */
+      .row {
+        display: grid;
+        grid-template-columns: 108px 1fr 52px;
+        gap: 0 12px;
+        align-items: center;
+        padding: 6px 10px 6px 12px;
+        border-radius: 5px;
+        border-left: 3px solid transparent;
+      }
+      .row:hover {
+        background: var(--surface);
+      }
+
+      .row.admin {
+        border-left-color: var(--admin);
+      }
+      .row.morning {
+        border-left-color: var(--morning);
+      }
+      .row.aft1 {
+        border-left-color: var(--afternoon);
+      }
+      .row.aft2 {
+        border-left-color: var(--afternoon2);
+      }
+      .row.keynote {
+        border-left-color: var(--keynote);
+        background: #1d1608;
+      }
+      .row.keynote:hover {
+        background: #252009;
+      }
+      .row.lunch {
+        border-left-color: var(--gold);
+        background: #161409;
+      }
+      .row.lunch:hover {
+        background: #1d1b0b;
+      }
+      .row.qa {
+        border-left-color: transparent;
+      }
+      .row.brk {
+        border-left-color: var(--brk);
+      }
+
+      /* ── Time ── */
+      .time {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .time-start {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .time-end {
+        font-size: 11px;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ── Content ── */
+      .speaker {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .talk {
+        font-size: 11.5px;
+        color: var(--muted);
+        font-style: italic;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .note {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .label-only {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--muted);
+      }
+      .label-only.big {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .keynote-badge {
+        display: inline-block;
+        background: var(--keynote);
+        color: #000;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 1px 6px;
+        border-radius: 3px;
+        margin-bottom: 3px;
+      }
+
+      /* ── Duration ── */
+      .dur {
+        text-align: right;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      /* ── Footer ── */
+      footer {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 6px;
+        border-top: 1px solid var(--border);
+        gap: 12px;
+      }
+      .footer-center {
+        font-size: 10px;
+        color: var(--border);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-align: center;
+        flex: 1;
+      }
+      .footer-spacer {
+        min-width: 112px;
+      }
+      .lunch-qr {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        background: #1a1606;
+        border: 1px solid var(--gold);
+        border-radius: 6px;
+        padding: 6px 8px 5px;
+        min-width: 112px;
+      }
+      .lunch-qr img {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+        border-radius: 3px;
+        display: block;
+      }
+      .qr-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-top: 1px;
+      }
+      .qr-sub {
+        font-size: 8.5px;
+        color: var(--muted);
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div class="lunch-qr">
+          <img
+            src="Coupa Cafe - Green Library.png"
+            alt="Order lunch ahead QR code"
+          />
+          <div class="qr-label">Order Lunch Ahead</div>
+          <div class="qr-sub">Coupa Café · Green Library</div>
+        </div>
+        <div>
+          <div class="conf-label">Program &nbsp;·&nbsp; 2026</div>
+          <div class="conf-title">California Map Society Spring Meeting</div>
+        </div>
+        <div class="header-right">All times approximate</div>
+      </header>
+
+      <div class="columns">
+        <!-- ════ LEFT COLUMN ════ -->
+        <div class="left-col">
+          <!-- Opening -->
+          <div class="session-block">
+            <div class="session-header">
+              <div class="pip" style="background: var(--admin)"></div>
+              <h2>Opening</h2>
+              <div class="rule"></div>
+            </div>
+            <div class="row admin">
+              <div class="time">
+                <span class="time-start">10:00 am</span
+                ><span class="time-end">10:15 am</span>
+              </div>
+              <div class="content">
+                <div class="label-only big">Doors Open</div>
+              </div>
+              <div class="dur">15 min</div>
+            </div>
+            <div class="row admin">
+              <div class="time">
+                <span class="time-start">10:15 am</span
+                ><span class="time-end">10:45 am</span>
+              </div>
+              <div class="content">
+                <div class="label-only big">Business Meeting</div>
+              </div>
+              <div class="dur">30 min</div>
+            </div>
+            <div class="row admin">
+              <div class="time">
+                <span class="time-start">10:45 am</span
+                ><span class="time-end">10:55 am</span>
+              </div>
+              <div class="content">
+                <div class="label-only big">Welcome Remarks</div>
+                <div class="note">Evan Thornberry and Ken Habeeb</div>
+              </div>
+              <div class="dur">10 min</div>
+            </div>
+          </div>
+
+          <!-- Morning Session -->
+          <div class="session-block">
+            <div class="session-header">
+              <div class="pip" style="background: var(--morning)"></div>
+              <h2>Morning Session</h2>
+              <div class="rule"></div>
+            </div>
+            <div class="row morning">
+              <div class="time">
+                <span class="time-start">10:55 am</span
+                ><span class="time-end">11:20 am</span>
+              </div>
+              <div class="content">
+                <div class="speaker">Tom Paper</div>
+                <div class="talk">The Mistakes on Maps</div>
+              </div>
+              <div class="dur">25 min</div>
+            </div>
+            <div class="row qa">
+              <div class="time">
+                <span class="time-start">11:20 am</span
+                ><span class="time-end">11:25 am</span>
+              </div>
+              <div class="content"><div class="label-only">Q &amp; A</div></div>
+              <div class="dur">5 min</div>
+            </div>
+            <div class="row morning">
+              <div class="time">
+                <span class="time-start">11:25 am</span
+                ><span class="time-end">11:55 am</span>
+              </div>
+              <div class="content">
+                <div class="speaker">Matthew Nachamkin</div>
+                <div class="talk">
+                  Filling in the Blanks: GeoGuessr and the Future of Mapping
+                </div>
+              </div>
+              <div class="dur">25 min</div>
+            </div>
+            <div class="row qa">
+              <div class="time">
+                <span class="time-start">11:55 am</span
+                ><span class="time-end">12:00 pm</span>
+              </div>
+              <div class="content"><div class="label-only">Q &amp; A</div></div>
+              <div class="dur">5 min</div>
+            </div>
+            <div class="row admin">
+              <div class="time">
+                <span class="time-start">12:00 pm</span
+                ><span class="time-end">12:05 pm</span>
+              </div>
+              <div class="content">
+                <div class="label-only big">Announcements</div>
+              </div>
+              <div class="dur">10 min</div>
+            </div>
+          </div>
+
+          <!-- Lunch -->
+          <div class="session-block">
+            <div class="session-header">
+              <div class="pip" style="background: var(--gold)"></div>
+              <h2>Lunch</h2>
+              <div class="rule"></div>
+            </div>
+            <div class="row lunch">
+              <div class="time">
+                <span class="time-start">12:05 pm</span
+                ><span class="time-end">1:30 pm</span>
+              </div>
+              <div class="content"><div class="label-only big">Lunch</div></div>
+              <div class="dur">1 hr 25 min</div>
+            </div>
+          </div>
+        </div>
+        <!-- /left -->
+
+        <!-- ════ RIGHT COLUMN ════ -->
+        <div class="right-col">
+          <!-- Afternoon Session I -->
+          <div class="session-block">
+            <div class="session-header">
+              <div class="pip" style="background: var(--afternoon)"></div>
+              <h2>Afternoon Session I</h2>
+              <div class="rule"></div>
+            </div>
+            <div class="row aft1">
+              <div class="time">
+                <span class="time-start">1:30 pm</span
+                ><span class="time-end">1:55 pm</span>
+              </div>
+              <div class="content">
+                <div class="speaker">Zoe Dilles</div>
+                <div class="talk">US Federal Land Records Research</div>
+              </div>
+
+              <div class="dur">25 min</div>
+            </div>
+            <div class="row qa">
+              <div class="time">
+                <span class="time-start">1:55 pm</span
+                ><span class="time-end">2:00 pm</span>
+              </div>
+              <div class="content"><div class="label-only">Q &amp; A</div></div>
+              <div class="dur">5 min</div>
+            </div>
+            <div class="row aft1">
+              <div class="time">
+                <span class="time-start">2:00 pm</span
+                ><span class="time-end">2:25 pm</span>
+              </div>
+              <div class="content">
+                <div class="speaker">Ed Lanfranco</div>
+                <div class="talk">Forbidden City Cartography</div>
+              </div>
+              <div class="dur">25 min</div>
+            </div>
+            <div class="row qa">
+              <div class="time">
+                <span class="time-start">2:25 pm</span
+                ><span class="time-end">2:30 pm</span>
+              </div>
+              <div class="content"><div class="label-only">Q &amp; A</div></div>
+              <div class="dur">5 min</div>
+            </div>
+            <div class="row aft1">
+              <div class="time">
+                <span class="time-start">2:30 pm</span
+                ><span class="time-end">2:55 pm</span>
+              </div>
+              <div class="content">
+                <div class="speaker">Jayne Kilander</div>
+                <div class="talk">
+                  You Are Here: Transit Cartography &amp; Spatial Identity
+                </div>
+              </div>
+              <div class="dur">25 min</div>
+            </div>
+            <div class="row qa">
+              <div class="time">
+                <span class="time-start">2:55 pm</span
+                ><span class="time-end">3:00 pm</span>
+              </div>
+              <div class="content"><div class="label-only">Q &amp; A</div></div>
+              <div class="dur">5 min</div>
+            </div>
+            <div class="row brk">
+              <div class="time">
+                <span class="time-start">3:00 pm</span
+                ><span class="time-end">3:10 pm</span>
+              </div>
+              <div class="content"><div class="label-only big">Break</div></div>
+              <div class="dur">10 min</div>
+            </div>
+          </div>
+
+          <!-- Afternoon Session II -->
+          <div class="session-block">
+            <div class="session-header">
+              <div class="pip" style="background: var(--afternoon2)"></div>
+              <h2>Afternoon Session II</h2>
+              <div class="rule"></div>
+            </div>
+            <div class="row aft2">
+              <div class="time">
+                <span class="time-start">3:10 pm</span
+                ><span class="time-end">3:35 pm</span>
+              </div>
+              <div class="content">
+                <div class="speaker">Josephine Arader</div>
+                <div class="talk">
+                  The Shaping of California Through Maps, 1846–1873
+                </div>
+              </div>
+              <div class="dur">25 min</div>
+            </div>
+            <div class="row qa">
+              <div class="time">
+                <span class="time-start">3:35 pm</span
+                ><span class="time-end">3:40 pm</span>
+              </div>
+              <div class="content"><div class="label-only">Q &amp; A</div></div>
+              <div class="dur">5 min</div>
+            </div>
+            <div class="row brk">
+              <div class="time">
+                <span class="time-start">3:40 pm</span
+                ><span class="time-end">3:50 pm</span>
+              </div>
+              <div class="content"><div class="label-only big">Break</div></div>
+              <div class="dur">10 min</div>
+            </div>
+            <div class="row keynote">
+              <div class="time">
+                <span class="time-start">3:50 pm</span
+                ><span class="time-end">4:20 pm</span>
+              </div>
+              <div class="content">
+                <div class="keynote-badge">Keynote</div>
+                <div class="speaker">Julie Sweetkind-Singer</div>
+                <div class="talk">
+                  Spatial at Stanford: Mapping the Past to Get to the Present
+                </div>
+              </div>
+              <div class="dur">30 min</div>
+            </div>
+            <div class="row qa">
+              <div class="time">
+                <span class="time-start">4:20 pm</span
+                ><span class="time-end">4:25 pm</span>
+              </div>
+              <div class="content"><div class="label-only">Q &amp; A</div></div>
+              <div class="dur">5 min</div>
+            </div>
+            <div class="row admin">
+              <div class="time">
+                <span class="time-start">4:25 pm</span
+                ><span class="time-end">4:50 pm</span>
+              </div>
+              <div class="content"><div class="label-only big">Exit</div></div>
+              <div class="dur">25 min</div>
+            </div>
+          </div>
+        </div>
+        <!-- /right -->
+      </div>
+      <!-- /columns -->
+
+      <footer>
+        <div class="footer-center">
+          Cartography &amp; Maps Symposium &nbsp;·&nbsp; 2026
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
